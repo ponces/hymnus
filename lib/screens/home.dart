@@ -1,31 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:hymnus/screens/repo.dart';
+import 'package:hymnus/screens/settings.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.title});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({
+    super.key,
+    required this.title,
+  });
 
   final String title;
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomePageState extends State<HomePage> {
-  int currentPageIndex = 0;
+class _HomeScreenState extends State<HomeScreen> {
+  int currentScreenIndex = 0;
+  final List<Widget> screens = [
+    const RepoScreen(title: 'Repo'),
+    const SettingsScreen(title: 'Settings'),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: const Text('Hymnus'),
       ),
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {
           setState(() {
-            currentPageIndex = index;
+            currentScreenIndex = index;
           });
         },
-        selectedIndex: currentPageIndex,
+        selectedIndex: currentScreenIndex,
         destinations: const <Widget>[
           NavigationDestination(
             selectedIcon: Icon(Icons.home),
@@ -39,81 +47,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: <Widget>[
-        Card(
-          shadowColor: Colors.transparent,
-          margin: const EdgeInsets.all(8.0),
-          child: SizedBox.expand(
-            child: Center(
-              child: Text(
-                'Home page',
-                style: theme.textTheme.titleLarge,
-              ),
-            ),
-          ),
-        ),
-        const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Column(
-            children: <Widget>[
-              Card(
-                child: ListTile(
-                  leading: Icon(Icons.notifications_sharp),
-                  title: Text('Notification 1'),
-                  subtitle: Text('This is a notification'),
-                ),
-              ),
-              Card(
-                child: ListTile(
-                  leading: Icon(Icons.notifications_sharp),
-                  title: Text('Notification 2'),
-                  subtitle: Text('This is a notification'),
-                ),
-              ),
-            ],
-          ),
-        ),
-        ListView.builder(
-          reverse: true,
-          itemCount: 2,
-          itemBuilder: (BuildContext context, int index) {
-            if (index == 0) {
-              return Align(
-                alignment: Alignment.centerRight,
-                child: Container(
-                  margin: const EdgeInsets.all(8.0),
-                  padding: const EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.primary,
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: Text(
-                    'Hello',
-                    style: theme.textTheme.bodyLarge!
-                        .copyWith(color: theme.colorScheme.onPrimary),
-                  ),
-                ),
-              );
-            }
-            return Align(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                margin: const EdgeInsets.all(8.0),
-                padding: const EdgeInsets.all(8.0),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.primary,
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: Text(
-                  'Hi!',
-                  style: theme.textTheme.bodyLarge!
-                      .copyWith(color: theme.colorScheme.onPrimary),
-                ),
-              ),
-            );
-          },
-        ),
-      ][currentPageIndex],
+      body: screens[currentScreenIndex],
     );
   }
 }
