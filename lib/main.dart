@@ -13,10 +13,15 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Hymnus',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.blue,
+          brightness: MediaQuery.of(context).platformBrightness,
+        ),
         useMaterial3: true,
       ),
-      home: const HomeScreen(title: 'Home',),
+      home: const HomeScreen(
+        title: 'Home',
+      ),
     );
   }
 }
