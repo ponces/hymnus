@@ -68,11 +68,13 @@ class _SongScreenState extends State<SongScreen> {
               title: const Text('Copy'),
               onTap: () => _copyToClipboard(true),
             ),
-            ListTile(
-              leading: const Icon(Icons.save),
-              title: const Text('Export PDF'),
-              onTap: () => _exportPdf(),
-            ),
+            kIsWeb
+                ? Container()
+                : ListTile(
+                    leading: const Icon(Icons.save),
+                    title: const Text('Export PDF'),
+                    onTap: () => _exportPdf(),
+                  ),
           ],
         );
       },
