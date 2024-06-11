@@ -1,6 +1,6 @@
-# hymnus
+# Hymnus
 
-A new Flutter project.
+An easy way to access a repository of Christian songs and chords.
 
 ## Getting Started
 

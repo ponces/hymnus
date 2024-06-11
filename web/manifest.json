@@ -1,11 +1,11 @@
 {
-    "name": "hymnus",
-    "short_name": "hymnus",
+    "name": "Hymnus",
+    "short_name": "Hymnus",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "An easy way to access a repository of Christian songs and chords.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
