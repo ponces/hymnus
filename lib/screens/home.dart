@@ -111,7 +111,7 @@ class SongSearch extends SearchDelegate {
   Widget getSearchResults(String query) {
     List<Song> results = filterSongs(query);
     return ListView.builder(
-      itemExtent: 44,
+      itemExtent: 48.0,
       itemCount: results.length,
       itemBuilder: (BuildContext context, int index) {
         return ListTile(

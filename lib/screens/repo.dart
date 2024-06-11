@@ -22,7 +22,7 @@ class _RepoScreenState extends State<RepoScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: ListView.builder(
-        itemExtent: 64,
+        itemExtent: 68.0,
         itemCount: widget.songs.length,
         itemBuilder: (BuildContext context, int index) {
           return ListTile(
