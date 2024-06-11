@@ -21,9 +21,20 @@ class _SongScreenState extends State<SongScreen> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20.0),
-        child: Text(widget.lyrics),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(20.0),
+              child: Text(
+                widget.lyrics,
+                style: const TextStyle(fontSize: 16.0),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

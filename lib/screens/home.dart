@@ -1,14 +1,20 @@
+import 'package:diacritic/diacritic.dart';
 import 'package:flutter/material.dart';
+import 'package:hymnus/models/song.dart';
 import 'package:hymnus/screens/repo.dart';
 import 'package:hymnus/screens/settings.dart';
+import 'package:hymnus/screens/song.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
     super.key,
     required this.title,
+    required this.songs,
   });
 
   final String title;
+
+  final List<Song> songs;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -16,16 +22,23 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int currentScreenIndex = 0;
-  final List<Widget> screens = [
-    const RepoScreen(title: 'Repo'),
-    const SettingsScreen(title: 'Settings'),
-  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Hymnus'),
+        actions: currentScreenIndex == 0
+            ? <Widget>[
+                IconButton(
+                  icon: const Icon(Icons.search),
+                  onPressed: () => showSearch(
+                    context: context,
+                    delegate: SongSearch(songs: widget.songs),
+                  ),
+                )
+              ]
+            : <Widget>[],
       ),
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {
@@ -47,7 +60,91 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: screens[currentScreenIndex],
+      body: <Widget>[
+        RepoScreen(
+          title: 'Repo',
+          songs: widget.songs,
+        ),
+        const SettingsScreen(title: 'Settings'),
+      ][currentScreenIndex],
     );
+  }
+}
+
+class SongSearch extends SearchDelegate {
+  final List<Song> songs;
+
+  SongSearch({required this.songs});
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: const Icon(Icons.clear),
+        onPressed: () {
+          query = '';
+        },
+      ),
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.arrow_back),
+      onPressed: () => close(context, null),
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    var queryy = removeDiacritics(query).toLowerCase();
+    return getSearchResults(queryy);
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    var queryy = removeDiacritics(query).toLowerCase();
+    return getSearchResults(queryy);
+  }
+
+  Widget getSearchResults(String query) {
+    List<Song> results = filterSongs(query);
+    return ListView.builder(
+      itemExtent: 44,
+      itemCount: results.length,
+      itemBuilder: (BuildContext context, int index) {
+        return ListTile(
+          title: Text(
+            results[index].title,
+            maxLines: 1,
+          ),
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SongScreen(
+                title: results[index].title,
+                lyrics: results[index].lyrics,
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  List<Song> filterSongs(String query) {
+    List<Song> results = [];
+    for (var song in songs) {
+      if (query.isEmpty) {
+        results.add(song);
+      } else {
+        var title = removeDiacritics(song.title.toLowerCase());
+        if (title.contains(query)) {
+          results.add(song);
+        }
+      }
+    }
+    return results;
   }
 }
