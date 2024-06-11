@@ -95,12 +95,9 @@ class _SongScreenState extends State<SongScreen> {
     var tmpDir = (await getTemporaryDirectory()).path;
     var filename = getFilename(widget.title);
     var html = '''
-        <center>
-            <h1>${widget.title}</h1>
-        </center>
-        <br/>
-        <br/>
-        <font size="5">${widget.lyrics.replaceAll('\n', '<br/>')}</font>
+        <h1>${widget.title}</h1>
+        <hr/>
+        <p>${widget.lyrics}</p>
     ''';
     var pdfFile = File('$tmpDir/$filename');
     final pdfDoc = html2pdf.Document();
