@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:diacritic/diacritic.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:htmltopdfwidgets/htmltopdfwidgets.dart' as html2pdf;
 import 'package:path_provider/path_provider.dart';
 import 'package:share_extend/share_extend.dart';
@@ -29,8 +31,8 @@ class _SongScreenState extends State<SongScreen> {
         title: Text(widget.title),
         actions: <Widget>[
           IconButton(
-            icon: const Icon(Icons.share),
-            onPressed: () => _exportPdf(context),
+            icon: const Icon(Icons.more_vert),
+            onPressed: () => _showBottomSheet(),
           ),
         ],
       ),
@@ -52,7 +54,43 @@ class _SongScreenState extends State<SongScreen> {
     );
   }
 
-  Future<void> _exportPdf(BuildContext context) async {
+  Future<void> _showBottomSheet() async {
+    return showModalBottomSheet<void>(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      builder: (BuildContext context) {
+        return Wrap(
+          children: <Widget>[
+            ListTile(
+              leading: const Icon(Icons.assignment),
+              title: const Text('Copy'),
+              onTap: () => _copyToClipboard(true),
+            ),
+            ListTile(
+              leading: const Icon(Icons.save),
+              title: const Text('Export PDF'),
+              onTap: () => _exportPdf(),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _copyToClipboard(bool closeBottomSheet) {
+    Navigator.of(context).pop();
+    Clipboard.setData(ClipboardData(text: widget.lyrics));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text("Copied to Clipboard"),
+        backgroundColor: Theme.of(context).iconTheme.color,
+      ),
+    );
+  }
+
+  Future<void> _exportPdf() async {
     var tmpDir = (await getTemporaryDirectory()).path;
     var filename = getFilename(widget.title);
     var html = '''<!DOCTYPE html>
