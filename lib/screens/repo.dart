@@ -32,7 +32,7 @@ class _RepoScreenState extends State<RepoScreen> {
             ),
             subtitle: Text(
               maxLines: 1,
-              '${getDescription(widget.songs[index].lyrics)}...',
+              getDescription(widget.songs[index].lyrics),
               style: const TextStyle(fontStyle: FontStyle.italic),
             ),
             onTap: () => Navigator.push(

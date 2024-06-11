@@ -64,7 +64,7 @@ class _SongScreenState extends State<SongScreen> {
           children: <Widget>[
             ListTile(
               leading: const Icon(Icons.assignment),
-              title: const Text('Copy'),
+              title: const Text('Copy lyrics'),
               onTap: () => _copyToClipboard(true),
             ),
             kIsWeb
@@ -85,7 +85,7 @@ class _SongScreenState extends State<SongScreen> {
     Clipboard.setData(ClipboardData(text: widget.lyrics));
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: const Text("Copied to Clipboard"),
+        content: const Text("Copied to clipboard"),
         backgroundColor: Theme.of(context).iconTheme.color,
       ),
     );
@@ -94,23 +94,15 @@ class _SongScreenState extends State<SongScreen> {
   Future<void> _exportPdf() async {
     var tmpDir = (await getTemporaryDirectory()).path;
     var filename = getFilename(widget.title);
-    var html = '''<!DOCTYPE html>
-    <html>
-      <head>
-        <title>${widget.title}</title>
-      </head>
-      <body>
+    var html = '''
         <center>
             <h1>${widget.title}</h1>
         </center>
         <br/>
         <br/>
-        <font size="5">''';
-    html += widget.lyrics.replaceAll('\n', '<br/>');
-    html += '''</font>
-      </body>
-    </html>''';
-    var pdfFile = kIsWeb ? File(filename) : File('$tmpDir/$filename');
+        <font size="5">${widget.lyrics.replaceAll('\n', '<br/>')}</font>
+    ''';
+    var pdfFile = File('$tmpDir/$filename');
     final pdfDoc = html2pdf.Document();
     var widgets = await html2pdf.HTMLToPdf().convert(html);
     pdfDoc.addPage(html2pdf.MultiPage(
