@@ -37,7 +37,7 @@ jobs:
         run: flutter pub get
 
       - name: Build APP
-        run: flutter build web --release --web-renderer canvaskit --base-href /hymnus/
+        run: flutter build web --release --web-renderer canvaskit
 
       - name: Push to Github Pages
         if: startsWith(github.ref, 'refs/tags/')
