@@ -1,4 +1,4 @@
-package dev.ponces.hymnus
+package xyz.ponces.hymnus
 
 import io.flutter.embedding.android.FlutterActivity
 
