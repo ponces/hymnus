@@ -4,6 +4,8 @@ import 'package:hymnus/models/song.dart';
 import 'package:hymnus/screens/repo.dart';
 import 'package:hymnus/screens/settings.dart';
 import 'package:hymnus/screens/song.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
@@ -22,6 +24,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int currentScreenIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _applyAppSettings();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +76,12 @@ class _HomeScreenState extends State<HomeScreen> {
         const SettingsScreen(title: 'Settings'),
       ][currentScreenIndex],
     );
+  }
+
+  Future<void> _applyAppSettings() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool keepDisplayOn = prefs.getBool('keepDisplayOn') ?? false;
+    WakelockPlus.toggle(enable: keepDisplayOn);
   }
 }
 
