@@ -84,9 +84,8 @@ class _SongScreenState extends State<SongScreen> {
     Navigator.of(context).pop();
     Clipboard.setData(ClipboardData(text: widget.lyrics));
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text("Copied to clipboard"),
-        backgroundColor: Theme.of(context).iconTheme.color,
+      const SnackBar(
+        content: Text("Copied to clipboard"),
       ),
     );
   }
