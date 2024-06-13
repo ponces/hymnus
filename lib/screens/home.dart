@@ -156,6 +156,11 @@ class SongSearch extends SearchDelegate {
         var title = removeDiacritics(song.title.toLowerCase());
         if (title.contains(query)) {
           results.add(song);
+        } else {
+          var lyrics = removeDiacritics(song.lyrics.toLowerCase());
+          if (lyrics.contains(query)) {
+            results.add(song);
+          }
         }
       }
     }
