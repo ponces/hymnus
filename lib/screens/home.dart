@@ -136,10 +136,7 @@ class SongSearch extends SearchDelegate {
           onTap: () => Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => SongScreen(
-                title: results[index].title,
-                lyrics: results[index].lyrics,
-              ),
+              builder: (context) => SongScreen(song: results[index]),
             ),
           ),
         );
@@ -157,8 +154,9 @@ class SongSearch extends SearchDelegate {
         if (title.contains(query)) {
           results.add(song);
         } else {
-          var lyrics = removeDiacritics(song.lyrics.toLowerCase());
-          if (lyrics.contains(query)) {
+          var contains = song.lyrics.any((group) =>
+              removeDiacritics(group.data).toLowerCase().contains(query));
+          if (contains) {
             results.add(song);
           }
         }

@@ -5,18 +5,17 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:htmltopdfwidgets/htmltopdfwidgets.dart' as html2pdf;
+import 'package:hymnus/models/song.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_extend/share_extend.dart';
 
 class SongScreen extends StatefulWidget {
   const SongScreen({
     super.key,
-    required this.title,
-    required this.lyrics,
+    required this.song,
   });
 
-  final String title;
-  final String lyrics;
+  final Song song;
 
   @override
   State<SongScreen> createState() => _SongScreenState();
@@ -27,7 +26,7 @@ class _SongScreenState extends State<SongScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(widget.song.title),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.more_vert),
@@ -42,9 +41,10 @@ class _SongScreenState extends State<SongScreen> {
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(20.0),
-              child: Text(
-                widget.lyrics,
-                style: const TextStyle(fontSize: 16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: getLyricsWidgets(widget.song.lyrics),
               ),
             ),
           ),
@@ -82,21 +82,23 @@ class _SongScreenState extends State<SongScreen> {
 
   void _copyToClipboard(bool closeBottomSheet) {
     Navigator.of(context).pop();
-    Clipboard.setData(ClipboardData(text: widget.lyrics));
+    Clipboard.setData(ClipboardData(
+      text: getPlainLyrics(widget.song.lyrics),
+    ));
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text("Copied to clipboard"),
+        content: Text('Copied to clipboard'),
       ),
     );
   }
 
   Future<void> _exportPdf() async {
     var tmpDir = (await getTemporaryDirectory()).path;
-    var filename = getFilename(widget.title);
+    var filename = getFilename(widget.song.title);
     var html = '''
-        <h1>${widget.title}</h1>
+        <h1>${widget.song.title}</h1>
         <hr/>
-        <p>${widget.lyrics}</p>
+        ${getHtmlLyrics(widget.song.lyrics)}
     ''';
     var pdfFile = File('$tmpDir/$filename');
     final pdfDoc = html2pdf.Document();
@@ -123,5 +125,54 @@ class _SongScreenState extends State<SongScreen> {
       );
     }
     return '$filename.pdf';
+  }
+
+  List<Widget> getLyricsWidgets(List<Group> lyrics) {
+    List<Widget> widgets = [];
+    for (var group in lyrics) {
+      if (group.name == 'Refrão') {
+        widgets.add(
+          Text(
+            group.data,
+            style: const TextStyle(
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        );
+      } else {
+        widgets.add(
+          Text(
+            group.data,
+            style: const TextStyle(
+              fontSize: 16.0,
+            ),
+          ),
+        );
+      }
+      widgets.add(const SizedBox(height: 16.0));
+    }
+    return widgets;
+  }
+
+  String getPlainLyrics(List<Group> lyrics) {
+    String text = '';
+    for (var group in lyrics) {
+      text += '${group.data}\n\n';
+    }
+    return text;
+  }
+
+  String getHtmlLyrics(List<Group> lyrics) {
+    String text = '';
+    for (var group in lyrics) {
+      if (group.name == 'Refrão') {
+        text += '<p><b>${group.data}</b></p>';
+      } else {
+        text += '<p>${group.data}</p>';
+      }
+      text += '<br/>';
+    }
+    return text;
   }
 }

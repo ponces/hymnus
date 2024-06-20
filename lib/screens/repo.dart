@@ -64,17 +64,12 @@ class _RepoScreenState extends State<RepoScreen> {
                 maxLines: 1,
                 songs[index - 1].title,
               ),
-              subtitle: Text(
-                maxLines: 1,
-                getDescription(songs[index - 1].lyrics),
-                style: const TextStyle(fontStyle: FontStyle.italic),
-              ),
+              subtitle: Text(getLongType(songs[index - 1].type)),
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => SongScreen(
-                    title: songs[index - 1].title,
-                    lyrics: songs[index - 1].lyrics,
+                    song: songs[index - 1],
                   ),
                 ),
               ),
@@ -85,15 +80,21 @@ class _RepoScreenState extends State<RepoScreen> {
     );
   }
 
-  String getDescription(String lyrics) {
-    return lyrics.replaceAll('\n', ', ').replaceAll(',,', ',');
+  String getLongType(String type) {
+    return type == 'CC'
+        ? 'Cantor Cristão'
+        : type == 'HCC'
+            ? 'Hinário Para o Culto Cristão'
+            : 'Cântico';
   }
 
   void filterSongs(FilterType? value) {
     if (value == null || value == FilterType.All) {
       songs = widget.songs;
     } else {
-      songs = widget.songs.where((song) => song.type == FilterType.values[value.index].name).toList();
+      songs = widget.songs
+          .where((song) => song.type == FilterType.values[value.index].name)
+          .toList();
     }
     setState(() => filterTag = value);
   }
