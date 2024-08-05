@@ -1,7 +1,18 @@
-class Song {
+// ignore_for_file: constant_identifier_names
+
+import 'package:hymnus/models/setlist.dart';
+
+enum HymnalType {
+  Unknown,
+  CC,
+  HCC,
+  Other,
+}
+
+class Song implements ISetlistItem {
   final int id;
   final String title;
-  final String type;
+  final HymnalType type;
   final List<Group> lyrics;
 
   Song({
@@ -14,7 +25,11 @@ class Song {
   factory Song.fromJson(Map<String, dynamic> json) => Song(
         id: json['id'] as int,
         title: json['title'] as String,
-        type: json['type'] as String,
+        type: json['type'] == 'CC'
+            ? HymnalType.CC
+            : json['type'] == 'HCC'
+                ? HymnalType.HCC
+                : HymnalType.Other,
         lyrics: (json['lyrics'] as List<dynamic>)
             .map((l) => Group.fromJson(l))
             .toList(),

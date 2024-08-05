@@ -2,6 +2,7 @@ import 'package:diacritic/diacritic.dart';
 import 'package:flutter/material.dart';
 import 'package:hymnus/models/song.dart';
 import 'package:hymnus/screens/repo.dart';
+import 'package:hymnus/screens/setlists.dart';
 import 'package:hymnus/screens/settings.dart';
 import 'package:hymnus/screens/song.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -62,6 +63,11 @@ class _HomeScreenState extends State<HomeScreen> {
             label: 'Home',
           ),
           NavigationDestination(
+            selectedIcon: Icon(Icons.queue_music),
+            icon: Icon(Icons.queue_music_outlined),
+            label: 'Setlists',
+          ),
+          NavigationDestination(
             selectedIcon: Icon(Icons.settings),
             icon: Icon(Icons.settings_outlined),
             label: 'Settings',
@@ -73,6 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
           title: 'Repo',
           songs: widget.songs,
         ),
+        const SetlistsScreen(title: 'Setlists'),
         const SettingsScreen(title: 'Settings'),
       ][currentScreenIndex],
     );

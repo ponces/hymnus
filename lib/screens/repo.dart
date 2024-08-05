@@ -64,7 +64,7 @@ class _RepoScreenState extends State<RepoScreen> {
                 maxLines: 1,
                 songs[index - 1].title,
               ),
-              subtitle: Text(getLongType(songs[index - 1].type)),
+              subtitle: Text(getHymnalString(songs[index - 1].type)),
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -80,10 +80,10 @@ class _RepoScreenState extends State<RepoScreen> {
     );
   }
 
-  String getLongType(String type) {
-    return type == 'CC'
+  String getHymnalString(HymnalType type) {
+    return type == HymnalType.CC
         ? 'Cantor Cristão'
-        : type == 'HCC'
+        : type == HymnalType.HCC
             ? 'Hinário Para o Culto Cristão'
             : 'Cântico';
   }
@@ -92,9 +92,8 @@ class _RepoScreenState extends State<RepoScreen> {
     if (value == null || value == FilterType.All) {
       songs = widget.songs;
     } else {
-      songs = widget.songs
-          .where((song) => song.type == FilterType.values[value.index].name)
-          .toList();
+      songs =
+          widget.songs.where((song) => song.type.index == value.index).toList();
     }
     setState(() => filterTag = value);
   }
